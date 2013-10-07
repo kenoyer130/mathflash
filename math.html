@@ -1,0 +1,79 @@
+<html>
+<head>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script>
+var max = 6;
+var inRow = 20;
+var current = 0;
+
+var t;
+var q;
+
+$( document ).ready(function() {
+  $("#max").text(max);
+  $("#inRow").text(inRow);
+  
+  
+  	$("#response").keypress(function(e) {
+		if(e.keyCode != 13)
+			return;
+	
+		var a = t * q;
+		
+		var feedback;
+		
+		var anwser = $("#response").val();
+	
+		if(a==anwser) {
+			current++;
+			feedback = "<span style='color:blue;'>"+a+" is correct! "+(inRow - current)+" to go!!!</span>";
+		} else {
+			current = 0;
+			feedback = "<span style='color:red;'>"+anwser+" is wrong, "+a+" is the correct awnser.</span>";
+		}
+		
+		$("#feedback").html(feedback);
+		
+		if(current == inRow) {
+		
+			alert("you win!!!!");
+				$('#award').css('display','inline');
+			
+		} else {
+			generateMultiplicationQuestion();
+		}
+	});
+  
+  generateMultiplicationQuestion();
+});
+
+function generateMultiplicationQuestion() {
+	$("#current").text(current);
+
+	t = Math.floor(Math.random()*max) + 1;
+	q = Math.floor(Math.random()*max) + 1;
+	
+	$("#t").text(t);
+	$("#q").text(q);
+	
+	$("#response").val("");
+	$("#response").focus();
+}
+
+</script>
+</head>
+<body style="margin: 20px;margin-left: 20%;">
+<div>Max :<span id='max'></id></div>
+<div>In Row :<span id='inRow'></id></div>
+<div>Current :<span id='current'></id></div>
+<div>What is :</div>
+<table>
+<tr><td></td><td><div id="t" style="text-align:right;"></div></td></tr>
+<tr><td>X</td><td><div id="q" style="text-align:right;"></div></td></tr>
+<tr><td></td><td><input id="response" style="width:75px;"/></td></tr>
+</table>
+<div id="feedback" ></div>
+<img id="award" src="Monkey_jumps_2.gif" style="display:none;"/>
+
+</body>
+</html>
