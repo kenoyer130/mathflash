@@ -2,9 +2,10 @@
 <head>
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script>
-var max = 6;
-var inRow = 20;
+var max = 8;
+var inRow = 15;
 var current = 0;
+var timer = 8;
 
 var t;
 var q;
@@ -13,39 +14,47 @@ $( document ).ready(function() {
   $("#max").text(max);
   $("#inRow").text(inRow);
   
-  
-  	$("#response").keypress(function(e) {
+	$("#response").keypress(function(e) {
 		if(e.keyCode != 13)
 			return;
-	
-		var a = t * q;
-		
-		var feedback;
-		
-		var anwser = $("#response").val();
-	
-		if(a==anwser) {
-			current++;
-			feedback = "<span style='color:blue;'>"+a+" is correct! "+(inRow - current)+" to go!!!</span>";
-		} else {
-			current = 0;
-			feedback = "<span style='color:red;'>"+anwser+" is wrong, "+a+" is the correct awnser.</span>";
-		}
-		
-		$("#feedback").html(feedback);
-		
-		if(current == inRow) {
-		
-			alert("you win!!!!");
-				$('#award').css('display','inline');
-			
-		} else {
-			generateMultiplicationQuestion();
-		}
+
+		checkAnswer();
 	});
   
   generateMultiplicationQuestion();
 });
+
+function checkAnswer() {
+	var a = t * q;
+		
+	var feedback;
+	
+	var anwser = $("#response").val();
+
+	if(a==anwser) {
+		current++;
+		feedback = "<div style='color:blue;'>"+a+" is correct! "+(inRow - current)+" to go!!!</div>";
+	} else {
+		current = 0;
+		feedback = "<div style='color:red;'>"+anwser+" is wrong</div>";
+	}
+	
+	feedback += t + " x " + q+ " = "+a;
+	
+	currentSeconds = 0;
+	
+	$("#feedback").html(feedback); 
+	
+	if(current == inRow) {
+	
+		alert("you win!!!!");
+		$('#award').css('display','inline');
+		clearInterval(currentTimer);
+		
+	} else {
+		generateMultiplicationQuestion();
+	}
+}
 
 function generateMultiplicationQuestion() {
 	$("#current").text(current);
@@ -58,6 +67,26 @@ function generateMultiplicationQuestion() {
 	
 	$("#response").val("");
 	$("#response").focus();
+	
+	startTimer();
+}
+
+var currentTimer = 0;
+var currentSeconds = 0;
+
+function startTimer() {
+	clearInterval(currentTimer);
+
+	currentSeconds = 0;
+	currentTimer = setInterval(function(){updateTimer()}, 1000);
+}
+
+function updateTimer() {
+	$("#timer").text((timer - currentSeconds )+ " seconds left!");
+	currentSeconds++;
+	
+	if(currentSeconds==timer)
+		checkAnswer();
 }
 
 </script>
@@ -66,14 +95,17 @@ function generateMultiplicationQuestion() {
 <div>Max :<span id='max'></id></div>
 <div>In Row :<span id='inRow'></id></div>
 <div>Current :<span id='current'></id></div>
+
 <div>What is :</div>
+
 <table>
 <tr><td></td><td><div id="t" style="text-align:right;"></div></td></tr>
 <tr><td>X</td><td><div id="q" style="text-align:right;"></div></td></tr>
 <tr><td></td><td><input id="response" style="width:75px;"/></td></tr>
 </table>
+<div>Time left: <span id='timer'></id></div>
 <div id="feedback" ></div>
-<img id="award" src="Monkey_jumps_2.gif" style="display:none;"/>
+<img id="award" src="http://www.netanimations.net/dragon3Dtoon_breathingFireOnKnight_350x243_ani.gif" style="display:none;"/>
 
 </body>
 </html>
